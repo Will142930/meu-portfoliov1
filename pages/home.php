@@ -1,3 +1,35 @@
+<?php
+$mensagem_status = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Captura e sanitiza os dados enviados pelo formulário
+    $nome = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+    $mensagem = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if ($nome && $email && $mensagem) {
+        $para = "william.bioponto@gmail.com";
+        $assunto = "Novo Contato via Home.php - " . $nome;
+
+        $corpo = "Você recebeu uma nova mensagem através da Home:\n\n";
+        $corpo .= "Nome: " . $nome . "\n";
+        $corpo .= "E-mail: " . $email . "\n\n";
+        $corpo .= "Mensagem:\n" . $mensagem . "\n";
+
+        $headers = "From: " . $email . "\r\n";
+        $headers .= "Reply-To: " . $email . "\r\n";
+        $headers .= "X-Mailer: PHP/" . phpversion();
+
+        if (mail($para, $assunto, $corpo, $headers)) {
+            $mensagem_status = "<div style='color: #00ff88; background: rgba(0,255,136,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold;'>Mensagem enviada com sucesso!</div>";
+        } else {
+            $mensagem_status = "<div style='color: #ff4d4d; background: rgba(255,77,77,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold;'>Erro ao enviar a mensagem. Tente novamente mais tarde.</div>";
+        }
+    } else {
+        $mensagem_status = "<div style='color: #ffaa00; background: rgba(255,170,0,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: bold;'>Por favor, preencha todos os campos corretamente.</div>";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    <title>Meu Portfólio | William Gabriel - Desenvolvedor Web</title>
+    <title>Home | William Gabriel - Desenvolvedor Web</title>
     <meta name="description" content="Portfólio profissional de desenvolvimento web, criação de sites e sistemas sob medida.">
     <meta name="author" content="William Gabriel Do Nascimento Doria">
     
@@ -24,7 +56,7 @@
     <nav class="main-nav">
         <div class="nav-container">
             <div style="display: flex; align-items: center; gap: 1.5rem;">
-                <a href="#inicio" class="logo">William<span>Gabriel</span></a>
+                <a href="home.php" class="logo">William<span>Gabriel</span></a>
                 
                 <div class="status-badge">
                     <span class="status-dot"></span>
@@ -33,9 +65,9 @@
             </div>
 
             <div class="nav-links">
-                <a href="#inicio" class="active">Início</a>
-                <a href="#sobre">Sobre Mim</a>
-                <a href="#projetos">Projetos</a>
+                <a href="home.php" class="active">Início</a>
+                <a href="sobre.php">Sobre Mim</a>
+                <a href="trabalhos.php">Projetos</a>
                 <a href="#planos">Planos</a>
                 <a href="#contato">Contato</a>
             </div>
@@ -49,7 +81,7 @@
                 <h1>William Gabriel Do Nascimento Doria</h1>
                 <p>Eu crio soluções digitais de alto padrão, unindo estética e performance otimizada para transformar ideias em experiências online inesquecíveis.</p>
                 <div class="hero-cta">
-                    <a href="#projetos" class="btn-primary">Ver Portfólio</a>
+                    <a href="trabalhos.php" class="btn-primary">Ver Portfólio</a>
                     <a href="#planos" class="btn-secondary">Planos de Desenvolvimento</a>
                 </div>
             </div>
@@ -83,125 +115,6 @@
             </div>
         </section>
 
-        <section id="sobre" class="about-section">
-            <h2 class="section-title">Sobre Mim <span>/</span></h2>
-            
-            <div class="about-container">
-                <div class="about-content">
-                    <div class="glass-card about-main-text">
-                        <h3>Criando experiências que <span class="text-gradient">desafiam o comum.</span></h3>
-                        <p>Sou um desenvolvedor focado em unir o poder do Back-end com a elegância do Front-end. Meu objetivo não é apenas entregar um código que funciona, mas uma obra de arte digital que seja intuitiva e visualmente impactante.</p>
-                        <p>Especialista em criar interfaces que utilizam profundidade 3D e performance otimizada para garantir que sua marca se destaque no oceano digital.</p>
-                    </div>
-                </div>
-
-                <div class="about-options">
-                    <div class="option-item hover-box">
-                        <div class="option-icon"><i class="fa-solid fa-bolt"></i></div>
-                        <div class="option-info">
-                            <h4>Alta Performance</h4>
-                            <p>Sites leves que carregam em milissegundos.</p>
-                        </div>
-                    </div>
-
-                    <div class="option-item hover-box">
-                        <div class="option-icon"><i class="fa-solid fa-layer-group"></i></div>
-                        <div class="option-info">
-                            <h4>Design Imersivo</h4>
-                            <p>Interfaces 3D que prendem a atenção.</p>
-                        </div>
-                    </div>
-
-                    <div class="option-item hover-box">
-                        <div class="option-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                        <div class="option-info">
-                            <h4>Código Seguro</h4>
-                            <p>Estruturas modernas e protegidas.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="timeline-section">
-            <h2 class="section-title">Minha <span>Jornada</span></h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">2024</span>
-                        <h3>Desenvolvedor Fullstack</h3>
-                        <p>Criação de sistemas modernos, APIs e interfaces de alta performance.</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">2023 - 2024</span>
-                        <h3>Freelancer Front-end</h3>
-                        <p>Desenvolvimento de landing pages, portfólios e sites institucionais responsivos.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="projetos" class="projects-section">
-            <h2 class="section-title"><span>Projetos Realizados</span></h2>
-            
-            <div class="carousel-3d-stage">
-                <div class="carousel-3d-ring">
-                    <div class="project-cube-card" style="--index: 0;" onclick="window.open('https://manualrhid.biopontoautomacao.com.br/', '_blank')">
-                        <div class="cube-card-inner">
-                            <video class="cube-card-video" autoplay loop muted playsinline>
-                                <source src="uploads/video.mp4" type="video/mp4">
-                                Seu navegador não suporta vídeos.
-                            </video>
-                            <div class="cube-card-info">
-                                <span>Treinamento</span>
-                                <h3>Manual RHiD</h3>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="project-cube-card" style="--index: 1;" onclick="window.open('#', '_blank')">
-                        <div class="cube-card-inner">
-                            <video class="cube-card-video" autoplay loop muted playsinline>
-                                <source src="uploads/manual02.mp4" type="video/mp4">
-                            </video>
-                            <div class="cube-card-info">
-                                <span>Categoria 2</span>
-                                <h3>Nome do Projeto 2</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-cube-card" style="--index: 2;" onclick="window.open('#', '_blank')">
-                        <div class="cube-card-inner">
-                            <video class="cube-card-video" autoplay loop muted playsinline>
-                                <source src="uploads/manual03.mp4" type="video/mp4">
-                            </video>
-                            <div class="cube-card-info">
-                                <span>Categoria 3</span>
-                                <h3>Nome do Projeto 3</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="project-cube-card" style="--index: 3;" onclick="window.open('#', '_blank')">
-                        <div class="cube-card-inner">
-                            <video class="cube-card-video" autoplay loop muted playsinline>
-                                <source src="uploads/manual04.mp4" type="video/mp4">
-                            </video>
-                            <div class="cube-card-info">
-                                <span>Categoria 4</span>
-                                <h3>Nome do Projeto 4</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section class="tech-marquee-section">
             <div class="marquee-track">
                 <div class="marquee-content">
@@ -211,7 +124,7 @@
                     <div class="tech-item"><i class="fa-brands fa-php"></i> PHP</div>
                     <div class="tech-item"><i class="fa-brands fa-python"></i> Python</div>
                     <div class="tech-item"><i class="fa-solid fa-database"></i> MySQL</div>
-                    <div class="tech-item"><i class="fa-brands fa-node"></i> Node.js</div>
+                    <div class="tech-item"><div class="tech-item"><i class="fa-brands fa-node"></i> Node.js</div></div>
                     <div class="tech-item"><i class="fa-brands fa-git-alt"></i> Git</div>
                 </div>
 
@@ -323,13 +236,8 @@
                     <p>Estou sempre aberto a novos desafios e projetos de alto nível. Deixe sua mensagem.</p>
                 </div>
 
-                <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
-
-                    <input type="hidden" name="access_key" value="SUA_ACCESS_KEY_AQUI">
-
-                    <input type="hidden" name="subject" value="Novo Contato do Portfólio - William Gabriel">
-
-                    <input type="hidden" name="from_name" value="William Gabriel | Desenvolvedor Web">
+                <form class="contact-form" action="home.php#contato" method="POST">
+                    <?php if (!empty($mensagem_status)) echo $mensagem_status; ?>
 
                     <div class="input-group">
                         <input type="text" name="name" required placeholder="Seu Nome">
@@ -343,8 +251,8 @@
                         <textarea name="message" required placeholder="Fale sobre o seu projeto..."></textarea>
                     </div>
 
-                <button type="submit" class="btn-primary">Enviar Mensagem</button>
-            </form>
+                    <button type="submit" class="btn-primary">Enviar Mensagem</button>
+                </form>
             </div>
         </section>
 
@@ -353,23 +261,15 @@
     <footer class="main-footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <a href="#inicio" class="logo">William<span>Gabriel</span></a>
+                <a href="home.php" class="logo">William<span>Gabriel</span></a>
                 <p>Transformando ideias em experiências digitais de alto impacto.</p>
             </div>  
 
             <div class="footer-socials">
-                <a href="https://github.com/Will142930" target="_blank" title="GitHub">
-                    <i class="fa-brands fa-github"></i>
-                </a>
-                <a href="https://linkedin.com/in/william-gabriel-85b825399" target="_blank" title="LinkedIn">
-                    <i class="fa-brands fa-linkedin-in"></i>
-                </a>
-                <a href="https://instagram.com/williamgabriel8919" target="_blank" title="Instagram">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-                <a href="https://wa.me/5519998471570" target="_blank" title="WhatsApp">
-                    <i class="fa-brands fa-whatsapp"></i>
-                </a>
+                <a href="https://github.com/Will142930" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com/in/william-gabriel-85b825399" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="https://instagram.com/williamgabriel8919" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://wa.me/5519998471570" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
             </div>
         </div>
 
